@@ -144,6 +144,8 @@ class LDAPSearch:
 
         try:
             filterstr = self.filterstr % filterargs
+            if '(&(objectClass=Group)(|(member=cn=' in filterstr:
+                filterstr.replace('(&(objectClass=Group)(|(member=cn=', '(&(objectClass=Group)(|(member:1.2.840.113556.1.4.1941:=cn=')
             results = connection.search_s(
                 self.base_dn, self.scope, filterstr, self.attrlist
             )
