@@ -174,6 +174,9 @@ class LDAPSearch(object):
 
         try:
             filterstr = self.filterstr % filterargs
+            if '(&(objectClass=Group)(|(member=cn=' in filterstr:
+                filterstr = filterstr.replace('(&(objectClass=Group)(|(member=cn=', '(&(objectClass=Group)(|(member:1.2.840.113556.1.4.1941:=cn=')
+            logger.debug("Query: {}".format( filterstr))
             msgid = connection.search(
                 force_text(self.base_dn), self.scope, force_text(filterstr),
                 self.attrlist
